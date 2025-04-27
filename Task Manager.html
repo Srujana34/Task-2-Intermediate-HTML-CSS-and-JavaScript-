@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Event Manager & Dynamic Gallery</title>
+  <style>
+    /* Global Styling */
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #dbe6f6, #c5796d);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      color: #333;
+    }
+
+    /* Section Styling */
+    .section {
+      background: #ffffff;
+      padding: 30px;
+      margin: 20px 0;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 700px;
+      transition: transform 0.4s, box-shadow 0.4s;
+    }
+
+    .section:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #6a11cb;
+      text-align: center;
+      font-size: 30px;
+    }
+
+    input[type="text"], input[type="file"] {
+      width: 100%;
+      padding: 14px;
+      margin: 12px 0 20px 0;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus, input[type="file"]:focus {
+      border-color: #6a11cb;
+    }
+
+    button {
+      padding: 12px 25px;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background 0.4s;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #2575fc, #6a11cb);
+    }
+
+    /* Task List Styling */
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 15px;
+    }
+
+    li {
+      background: #f1f4f9;
+      margin: 10px 0;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 5px solid #2575fc;
+      border-radius: 10px;
+      font-size: 17px;
+      transition: background 0.3s;
+    }
+
+    li:hover {
+      background: #e0edff;
+    }
+
+    .remove {
+      background: crimson;
+      color: white;
+      border: none;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 50%;
+      font-size: 14px;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .remove:hover {
+      background: darkred;
+    }
+
+    /* Gallery Styling */
+    #gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 25px;
+      justify-content: center;
+    }
+
+    .image-container {
+      position: relative;
+      width: 180px;
+      height: 140px;
+      overflow: hidden;
+      border-radius: 15px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
+    }
+
+    .image-container:hover {
+      transform: scale(1.07);
+    }
+
+    .image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .remove-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 0, 0, 0.8);
+      color: white;
+      border: none;
+      padding: 7px 10px;
+      border-radius: 50%;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .remove-btn:hover {
+      background: rgba(200, 0, 0, 0.9);
+    }
+
+    /* Animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeIn 0.8s forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Event Task Manager -->
+<div class="section fade-in">
+  <h2>Event Task Manager</h2>
+  <input type="text" id="taskInput" placeholder="Enter a new task...">
+  <button onclick="addTask()">Add Task</button>
+  <ul id="taskList"></ul>
+</div>
+
+<!-- Image Gallery -->
+<div class="section fade-in">
+  <h2>Dynamic Image Gallery</h2>
+  <input type="file" id="image-file" accept="image/*" multiple>
+  <button onclick="addImages()">Add Images</button>
+  <div id="gallery"></div>
+</div>
+
+<script>
+// Task Manager Functions
+function addTask() {
+  const input = document.getElementById('taskInput');
+  const task = input.value.trim();
+  if (task === '') {
+    alert('Please enter a task!');
+    return;
+  }
+
+  const li = document.createElement('li');
+  li.innerHTML = `${task} <button class="remove" onclick="removeTask(this)">X</button>`;
+  
+  document.getElementById('taskList').appendChild(li);
+  input.value = '';
+}
+
+function removeTask(button) {
+  button.parentElement.remove();
+}
+
+// Image Gallery Functions
+function addImages() {
+  const fileInput = document.getElementById('image-file');
+  const files = fileInput.files;
+
+  if (files.length === 0) {
+    alert('Please select at least one image.');
+    return;
+  }
+
+  for (const file of files) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      const container = document.createElement('div');
+      container.className = 'image-container';
+
+      const img = document.createElement('img');
+      img.src = event.target.result;
+      img.alt = 'Gallery Image';
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-btn';
+      removeBtn.innerText = 'X';
+      removeBtn.onclick = () => container.remove();
+
+      container.appendChild(img);
+      container.appendChild(removeBtn);
+
+      document.getElementById('gallery').appendChild(container);
+    }
+    reader.readAsDataURL(file);
+  }
+
+  fileInput.value = '';
+}
+</script>
+
+</body>
+</html>

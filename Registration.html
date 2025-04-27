@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Event Registration</title>
+  <link rel="stylesheet" href="style.css"> <!-- Link CSS here -->
+</head>
+<body>
+
+<div class="container">
+  <form id="eventForm">
+    <h2>Event Registration</h2>
+    <input type="text" id="fullName" placeholder="Full Name" required>
+    <input type="email" id="email" placeholder="Email Address" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <input type="text" id="phone" placeholder="Phone Number" required>
+    <select id="eventSelect" required>
+      <option value="">Select Event</option>
+      <option value="Music Fest">Music Fest</option>
+      <option value="Tech Talk">Tech Talk</option>
+      <option value="Art Workshop">Art Workshop</option>
+      <option value="Food Carnival">Food Carnival</option>
+    </select>
+    <button type="submit">Register</button>
+  </form>
+</div>
+
+<script src="script.js"></script> <!-- Link JavaScript here -->
+
+</body>
+</html>
